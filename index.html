@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Wild2Avatar</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="https://reconfusion.github.io/img/overview_combined.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1711">
+    <meta property="og:image:height" content="576">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://reconfusion.github.io/"/>
+    <meta property="og:title" content="Wild2Avatar: Rendering Humans Behind Occlusions" />
+    <meta property="og:description" content="3D reconstruction methods such as Neural Radiance Fields (NeRFs) excel at rendering photorealistic novel views of complex scenes. However, recovering a high-quality NeRF typically requires tens to hundreds of input images, resulting in a time-consuming capture process. We present ReconFusion to reconstruct real-world scenes using only a few photos. Our approach leverages a diffusion prior for novel view synthesis, trained on synthetic and multiview datasets, which regularizes a NeRF-based 3D reconstruction pipeline at novel camera poses beyond those captured by the set of input images. Our method synthesizes realistic geometry and texture in underconstrained regions while preserving the appearance of observed regions. We perform an extensive evaluation across various real-world datasets, including forward-facing and 360-degree scenes, demonstrating significant performance improvements over previous few-view NeRF reconstruction approaches."/>
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Wild2Avatar: Rendering Humans Behind Occlusions" />
+    <meta name="twitter:description" content="3D reconstruction methods such as Neural Radiance Fields (NeRFs) excel at rendering photorealistic novel views of complex scenes. However, recovering a high-quality NeRF typically requires tens to hundreds of input images, resulting in a time-consuming capture process. We present ReconFusion to reconstruct real-world scenes using only a few photos. Our approach leverages a diffusion prior for novel view synthesis, trained on synthetic and multiview datasets, which regularizes a NeRF-based 3D reconstruction pipeline at novel camera poses beyond those captured by the set of input images. Our method synthesizes realistic geometry and texture in underconstrained regions while preserving the appearance of observed regions. We perform an extensive evaluation across various real-world datasets, including forward-facing and 360-degree scenes, demonstrating significant performance improvements over previous few-view NeRF reconstruction approaches."/>
+    <meta name="twitter:image" content="https://reconfusion.github.io/img/framework.pdf" />
+
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤔</text></svg>">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/fontawesome.all.min.css">
+	<link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+
+	<!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZERS5BVPS"></script>
+  <script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'G-8ZERS5BVPS');
+  </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+	<script defer src="js/fontawesome.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/synced_video_selector.js"></script>
+    <script src="js/video_comparison.js"></script>
+
+</head>
+
+<body style="padding: 5%; width: 100%">
+    <div class="container-lg text-center" style="max-width: 1500px; margin: auto;" id="main">
+    <!-- <div class="container" id="main"> -->
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <b>Wild2Avatar</b>: Rendering Humans Behind Occlusions</br> 
+            </h2>
+        </div>
+        <div class="row text-center">
+<div class="col-md-3">
+    </div>
+            <div class="col-md-6 text-center">
+                <ul class="list-inline">
+                    <li>
+                        <a href="https://ai.stanford.edu/~xtiange/">
+                            Tiange Xiang
+                        </a><sup>1</sup>
+                    </li>
+                    <li>
+                        <a href="https://adamsunn.github.io">
+                            Adam Sun
+                        </a><sup>1</sup>
+                    </li>
+                    <li>
+                        <a href="https://nmbl.stanford.edu/people/scott-delp/">
+                            Scott Delp
+                        </a><sup>1</sup>
+                    </li>
+                    <li>
+                        <a href="https://kazukikozuka.net">
+                            Kazuki Kozuka
+                        </a><sup>2</sup>
+                    </li>
+                    <wbr>
+                    <li>
+                        <a href="https://profiles.stanford.edu/fei-fei-li">
+                            Li Fei-Fei
+                        </a><sup>1</sup>
+                    </li>
+                    <li>
+                        <a href="https://scholar.google.com/citations?user=_pKKv2QAAAAJ&hl=en/">
+                            Ehsan Adeli
+                        </a><sup>1</sup>
+                    </li>
+                    <!-- </br>Google -->
+                </ul>
+            </div>
+<div class="col-md-3">
+    </div>
+            <div class="col-md-12 text-center">
+                <sup>1</sup>Stanford University, &nbsp <sup>2</sup> Panasonic
+
+            </div>
+</div>
+
+
+        <div class="row text-center">
+					
+			     <span class="link-block">
+                <a href="https://arxiv.org/abs/2312.02981"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+			</div>
+
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <video id="teaser-video-ours" width="100%" autoplay loop muted controls>
+                  <source src="videos/teaser/OcMotion-1-rendering.mp4" type="video/mp4" />
+                </video>
+<!-- 
+                <video id="teaser-video-ours" width="100%" autoplay loop muted>
+                  <source src="videos/teaser/grid_ours.mp4" type="video/mp4" />
+                </video>
+                <video id="teaser-video-zipenrf" width="100%" autoplay loop muted hidden>
+                  <source src="videos/teaser/grid_zipnerf.mp4" type="video/mp4" />
+                </video>
+
+                <div class="switch-container-wrapper">
+                    <div class="switch-container">
+                        <span class="switch-label">Ours</span>
+                        <label class="switch">
+                            <input type="checkbox" id="teaserVideoSwitch" onclick="selectTeaserVideo()">
+                            <div class="slider round"></div>
+                        </label>
+                        <span class="switch-label">Zip-NeRF</span>
+                    </div>
+                </div>
+                <script>
+                    function selectTeaserVideo() {
+                      var video_ours = document.getElementById("teaser-video-ours");
+                      var video_zipnerf = document.getElementById("teaser-video-zipenrf");
+                      var videoSwitch = document.getElementById("teaserVideoSwitch");
+                      if (videoSwitch.checked) {
+                        video_zipnerf.hidden = false;
+                        video_ours.hidden = true;
+                      } else {
+                        video_zipnerf.hidden = true;
+                        video_ours.hidden = false;
+                      }
+                    }
+                </script>
+ -->
+			</div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Abstract
+                </h3>
+                <p class="text-justify">
+                    Rendering the visual appearance of moving humans from occluded monocular videos is a challenging task. Most existing research renders 3D humans under ideal conditions, requiring a clear and unobstructed scene. Those methods cannot be used to render humans in real-world scenes where obstacles may block the camera's view and lead to partial occlusions. In this work, we present <b>Wild2Avatar</b>, a neural rendering approach catered for occluded in-the-wild monocular videos. We propose occlusion-aware scene parameterization for decoupling the scene into three parts - occlusion, human, and background. Additionally, extensive objective functions are designed to help enforce the decoupling of the human from both the occlusion and the background and to ensure the completeness of the human model. We verify the effectiveness of our approach with experiments on in-the-wild videos.
+                </p>
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Method
+                </h3>
+                <image src="img/framework.pdf" width=90% style="display: block; margin: auto;"></image>
+                <p class="text-justify">
+                    We parametrize the scene into occlusion, human, and background. We model the human and occlusion/background as two separate neural radiance fields. The human is parameterized in a bounded sphere  \(\Pi\) by first deforming ray samples into a canonical space with the help of the pre-computed body pose. The canonical points \(\mathbf{x}\) are passed into a rendering network \(\mathcal{F}^{fg}\) to learn the radiance \(\mathbf{c}\) and distance \(\mathbf{s}\) to the surface of the human, which can then be rendered through SDF-based volume rendering. The unbounded background is represented as coordinates on the surface of \(\Pi\) along with their inverted distances. Another rendering network \(\mathcal{F}^{scene}\) is used to learn the radiance and density for the background ray samples. The space of the occlusion is determined as the interval between the camera and an inner sphere \(\pi\). We parameterize ray samples as coordinates on the surface of \(\pi\) and the negation of the inverted distances to the center of inner sphere. We rely on the same network \(\mathcal{F}^{scene}\) to render the occlusions. The three renderings are sequentially aggregated and supervised on a combination of losses, in which we specifically encourage the decoupling of the occlusion from the human through \(\mathcal{L}_{occ}\) and penalize the incompleteness of human geometry through \(\mathcal{L}_{comp}\).
+                </p>
+            </div>
+        </div><br><br>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Results
+                </h3>
+                <div class="text-center ">
+                    <ul class="nav nav-pills center-pills">
+                        <li class="method-pill active" data-value="wild"
+                            onclick="selectCompVideo(this, activeScenePill)"><a>Wild2Avatar (Ours)</a></li>
+                        <li class="method-pill" data-value="vid"
+                            onclick="selectCompVideo(this, activeScenePill)"><a>Vid2Avatar</a></li>
+                    </ul>
+                </div>
+
+                <script>
+                    activeMethodPill = document.querySelector('.method-pill.active-pill');
+                    activeScenePill = document.querySelector('.scene-pill.active-pill');
+                </script>
+                
+                <div class="text-center">
+                    <div class="video-compare-container" id="compVideoDiv">
+                            <video class="video" id="compVideo0" loop playsinline autoPlay muted src="videos/comparison/wild/011.mp4" onplay="resizeAndPlay(this)"></video>
+                            <canvas height=0 class="videoMerge" id="compVideo0Merge"></canvas>
+                            <video class="video" id="compVideo1" loop playsinline autoPlay muted hidden src="videos/comparison/vid/011.mp4" onplay="resizeAndPlay(this)"></video>
+                            <canvas height=0 class="videoMerge" id="compVideo1Merge" hidden></canvas>
+                    </div>
+
+
+                    <br>
+                    <p class="text-justify" style="text-align: center;">
+                        Original Video (left) vs Rendered Human (right). Try selecting different methods and humans and move the slider!
+                    </p>
+                    <script>
+                        video0 = document.getElementById("compVideo0");
+                        video1 = document.getElementById("compVideo1");
+                        merge0 = document.getElementById("compVideo0Merge");
+                        merge1 = document.getElementById("compVideo1Merge");
+                        video0.addEventListener('loadedmetadata', function() {
+                            if (activeVidID == 0 && select){
+                                video0.play();
+                                // print video size
+                                console.log(video0.videoWidth, video0.videoHeight);
+                                video0.hidden = false;
+                                merge0.hidden = false;
+                                video1.hidden = true;
+                                merge1.hidden = true;
+                            }
+                        });
+                        video1.addEventListener('loadedmetadata', function() {
+                            if (activeVidID == 1 && select){
+                                video1.play();
+                                // print video size
+                                console.log(video1.videoWidth, video1.videoHeight);
+                                video0.hidden = true;
+                                merge0.hidden = true;
+                                video1.hidden = false;
+                                merge1.hidden = false;
+                            }
+                        });
+                    </script>
+
+                    <div class="pill-row scene-pills" id="scene-pills">
+                        <span class="pill scene-pill active" data-value="011" onclick="selectCompVideo(activeMethodPill, this, 3)">
+                            <img class="thumbnail-img" src="thumbnails/011.png" alt="DTU/scan31" width="64">
+                        </span>
+                        <span class="pill scene-pill" data-value="013" onclick="selectCompVideo(activeMethodPill, this, 3)">
+                            <img class="thumbnail-img" src="thumbnails/013.png" alt="DTU/scan45" width="64">
+                        </span>
+                        <span class="pill scene-pill" data-value="038" onclick="selectCompVideo(activeMethodPill, this, 3)">
+                            <img class="thumbnail-img" src="thumbnails/038.png" alt="LLFF/fern" width="64">
+                        </span>
+                        <span class="pill scene-pill" data-value="039" onclick="selectCompVideo(activeMethodPill, this, 3)">
+                            <img class="thumbnail-img" src="thumbnails/039.png" alt="LLFF/horns" width="64">
+                        </span>
+                        <span class="pill scene-pill" data-value="041" onclick="selectCompVideo(activeMethodPill, this, 3)">
+                            <img class="thumbnail-img" src="thumbnails/041.png" alt="Re10K/sofa" width="64">
+                        </span>
+                        <span class="pill scene-pill" data-value="custom" onclick="selectCompVideo(activeMethodPill, this, 3)">
+                            <img class="thumbnail-img" src="thumbnails/custom.png" alt="Re10K/living room" width="64">
+                        </span>
+                        <span class="pill scene-pill" data-value="youtube" onclick="selectCompVideo(activeMethodPill, this, 6)">
+                            <img class="thumbnail-img" src="thumbnails/youtube.png" alt="CO3D/bench" width="64">
+                        </span>
+                    </div>
+
+                    <script>
+                        activeMethodPill = document.querySelector('.method-pill.active-pill');
+                        activeScenePill = document.querySelector('.scene-pill.active-pill');
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        
+          
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Citation
+                </h3>
+                <div class="form-group col-md-10 col-md-offset-1">
+				  <p class="text-justify">
+                    <textarea id="bibtex" class="form-control" readonly>
+@article{xiang2023wild2avatar,
+    title={Wild2Avatar: Rendering Humans Behind Occlusions},
+    author={Tiange Xiang and Adam Sun and Scott Delp and Kazuki Kozuka and Li Fei-Fei and Ehsan Adeli},
+    journal={arXiv},
+    year={2023}
+	}</textarea></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Acknowledgements
+                </h3>
+                <p class="text-justify">
+                    This work was partially funded by the Panasonic Holdings Corporation, Gordon and Betty Moore Foundation, Jaswa Innovator Award, Stanford HAI, and Wu Tsai Human Performance Alliance. 
+                    <br><br>
+                The website template was borrowed from <a href="https://reconfusion.github.io">ReConFusion</a> and code was borrowed from <a href = "https://freebutuselesssoul.github.io/occnerf/">OCC-NeRF</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
